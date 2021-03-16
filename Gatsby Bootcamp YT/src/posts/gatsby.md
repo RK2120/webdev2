@@ -5,6 +5,8 @@ date: "2021-03-15"
 
 I'm a part of a new bootcamp!
 
+![Grass](./grasspic.jpeg)
+
 ## Topics covered
 
 1. Gatsby
