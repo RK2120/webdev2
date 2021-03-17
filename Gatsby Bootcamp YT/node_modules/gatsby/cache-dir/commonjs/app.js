@@ -27,20 +27,26 @@ var _indicator = require("./loading-indicator/indicator");
 
 var _devLoader = _interopRequireDefault(require("./dev-loader"));
 
-var _syncRequires = _interopRequireDefault(require("$virtual/sync-requires"));
+var _asyncRequires = _interopRequireDefault(require("$virtual/async-requires"));
 
 var _matchPaths = _interopRequireDefault(require("$virtual/match-paths.json"));
 
 var _loadingIndicator = require("./loading-indicator");
 
-// Generated during bootstrap
-if (process.env.GATSBY_HOT_LOADER === `fast-refresh` && module.hot) {
-  module.hot.accept(`$virtual/sync-requires`, () => {// Manually reload
-  });
-}
+var _root = _interopRequireDefault(require("./root"));
 
+var _navigation = require("./navigation");
+
+require("./blank.css");
+
+// Generated during bootstrap
+// ensure in develop we have at least some .css (even if it's empty).
+// this is so there is no warning about not matching content-type when site doesn't include any regular css (for example when css-in-js is used)
+// this also make sure that if all css is removed in develop we are not left with stale commons.css that have stale content
+// Enable fast-refresh for virtual sync-requires and gatsby-browser
+module.hot.accept([`$virtual/async-requires`, `./api-runner-browser`]);
 window.___emitter = _emitter.default;
-const loader = new _devLoader.default(_syncRequires.default, _matchPaths.default);
+const loader = new _devLoader.default(_asyncRequires.default, _matchPaths.default);
 (0, _loader.setLoader)(loader);
 loader.setApiRunner(_apiRunnerBrowser.apiRunner);
 window.___loader = _loader.publicLoader; // Do dummy dynamic import so the jsonp __webpack_require__.e is added to the commons.js
@@ -134,15 +140,13 @@ function notCalledFunction() {
   }
 
   Promise.all([loader.loadPage(`/dev-404-page/`), loader.loadPage(`/404.html`), loader.loadPage(window.location.pathname)]).then(() => {
-    const preferDefault = m => m && m.default || m;
-
-    const Root = preferDefault(require(`./root`));
+    (0, _navigation.init)();
     (0, _domready.default)(() => {
       if (dismissLoadingIndicator) {
         dismissLoadingIndicator();
       }
 
-      renderer( /*#__PURE__*/_react.default.createElement(Root, null), rootElement, () => {
+      renderer( /*#__PURE__*/_react.default.createElement(_root.default, null), rootElement, () => {
         (0, _apiRunnerBrowser.apiRunner)(`onInitialClientRender`); // Render query on demand overlay
 
         if (process.env.GATSBY_QUERY_ON_DEMAND_LOADING_INDICATOR && process.env.GATSBY_QUERY_ON_DEMAND_LOADING_INDICATOR === `true`) {

@@ -18,9 +18,6 @@ exports.Link = _gatsbyLink.default;
 exports.withPrefix = _gatsbyLink.withPrefix;
 exports.withAssetPrefix = _gatsbyLink.withAssetPrefix;
 exports.navigate = _gatsbyLink.navigate;
-exports.push = _gatsbyLink.push;
-exports.replace = _gatsbyLink.replace;
-exports.navigateTo = _gatsbyLink.navigateTo;
 exports.parsePath = _gatsbyLink.parsePath;
 
 var _gatsbyReactRouterScroll = require("gatsby-react-router-scroll");

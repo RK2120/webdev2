@@ -3,7 +3,7 @@
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 exports.__esModule = true;
-exports.default = void 0;
+exports.ShadowPortal = void 0;
 
 var React = _interopRequireWildcard(require("react"));
 
@@ -18,7 +18,7 @@ const ShadowPortal = function Portal({
   const [, forceUpdate] = React.useState();
   React.useLayoutEffect(() => {
     const ownerDocument = mountNode.current.ownerDocument;
-    portalNode.current = ownerDocument.createElement(`gatsby-portal`);
+    portalNode.current = ownerDocument.createElement(`gatsby-fast-refresh`);
     shadowNode.current = portalNode.current.attachShadow({
       mode: `open`
     });
@@ -35,5 +35,4 @@ const ShadowPortal = function Portal({
   });
 };
 
-var _default = ShadowPortal;
-exports.default = _default;
+exports.ShadowPortal = ShadowPortal;

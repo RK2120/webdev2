@@ -1,57 +1,43 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
 
 exports.__esModule = true;
-exports.default = void 0;
+exports.BuildError = BuildError;
 
-var _react = _interopRequireDefault(require("react"));
+var React = _interopRequireWildcard(require("react"));
 
-var _overlay = _interopRequireDefault(require("./overlay"));
+var _overlay = require("./overlay");
 
-var _anser = _interopRequireDefault(require("anser"));
-
-var _codeFrame = _interopRequireDefault(require("./code-frame"));
+var _codeFrame = require("./code-frame");
 
 var _utils = require("../utils");
 
-const BuildError = ({
-  error,
-  open,
-  dismiss
-}) => {
-  var _detailedError$filter;
-
-  const [file, cause, _emptyLine, ...rest] = error.split(`\n`);
-  const [_fullPath, _detailedError] = rest;
-
-  const detailedError = _anser.default.ansiToJson(_detailedError, {
-    remove_empty: true,
-    json: true
-  });
-
-  const lineNumberRegex = /^[0-9]*:[0-9]*$/g;
-  const lineNumberFiltered = (_detailedError$filter = detailedError.filter(d => d.content !== ` ` && d.content.match(lineNumberRegex))[0]) === null || _detailedError$filter === void 0 ? void 0 : _detailedError$filter.content;
-  const lineNumber = lineNumberFiltered.substr(0, lineNumberFiltered.indexOf(`:`));
-  const decoded = (0, _utils.prettifyStack)(rest);
-
-  const header = /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
+// Error that is thrown on e.g. webpack errors and thus can't be dismissed and must be fixed
+function BuildError({
+  error
+}) {
+  // Incoming build error shape is like this:
+  // Sometimes "Enter"
+  // ./relative-path-to-file
+  // Additional information (sometimes empty line => handled in "prettifyStack" function)
+  // /absolute-path-to-file
+  // Errors/Warnings
+  const decoded = (0, _utils.prettifyStack)(error);
+  const [filePath] = decoded;
+  const file = filePath.content.split(`\n`)[0];
+  return /*#__PURE__*/React.createElement(_overlay.Overlay, null, /*#__PURE__*/React.createElement(_overlay.Header, {
+    "data-gatsby-error-type": "build-error"
+  }, /*#__PURE__*/React.createElement("div", {
     "data-gatsby-overlay": "header__cause-file"
-  }, /*#__PURE__*/_react.default.createElement("p", null, cause), /*#__PURE__*/_react.default.createElement("span", null, file)), /*#__PURE__*/_react.default.createElement("button", {
-    onClick: () => open(file, lineNumber),
-    "data-gatsby-overlay": "header__open-in-editor"
-  }, "Open in editor"));
-
-  const body = /*#__PURE__*/_react.default.createElement(_codeFrame.default, {
+  }, /*#__PURE__*/React.createElement("h1", {
+    id: "gatsby-overlay-labelledby"
+  }, "Failed to compile"), /*#__PURE__*/React.createElement("span", null, file)), /*#__PURE__*/React.createElement(_overlay.HeaderOpenClose, {
+    open: () => (0, _utils.openInEditor)(file, 1),
+    dismiss: false
+  })), /*#__PURE__*/React.createElement(_overlay.Body, null, /*#__PURE__*/React.createElement("h2", null, "Source"), /*#__PURE__*/React.createElement(_codeFrame.CodeFrame, {
     decoded: decoded
-  });
-
-  return /*#__PURE__*/_react.default.createElement(_overlay.default, {
-    header: header,
-    body: body,
-    dismiss: dismiss
-  });
-};
-
-var _default = BuildError;
-exports.default = _default;
+  }), /*#__PURE__*/React.createElement(_overlay.Footer, {
+    id: "gatsby-overlay-describedby"
+  }, "This error occurred during the build process and can only be dismissed by fixing the error.")));
+}

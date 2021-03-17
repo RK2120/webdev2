@@ -21,11 +21,13 @@ module.exports = {
                     {
                         resolve: 'gatsby-remark-images',
                         options: {
-                            maxWidth: 
+                            maxWidth: 750,
+                            linkImagesToOriginal: false
                         }
                     }
                 ]
             }
         }
+
     ]
 }
