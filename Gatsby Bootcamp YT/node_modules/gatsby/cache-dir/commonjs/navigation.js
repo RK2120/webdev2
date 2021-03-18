@@ -183,7 +183,9 @@ function shouldUpdateScroll(prevRouterProps, {
     routerProps: {
       location
     },
-    getSavedScrollPosition: args => [0, this._stateStorage.read(args, args.key)]
+    getSavedScrollPosition: args => [0, // FIXME this is actually a big code smell, we should fix this
+    // eslint-disable-next-line @babel/no-invalid-this
+    this._stateStorage.read(args, args.key)]
   });
 
   if (results.length > 0) {

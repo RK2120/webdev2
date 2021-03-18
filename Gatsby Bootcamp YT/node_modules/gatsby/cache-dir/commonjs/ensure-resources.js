@@ -23,7 +23,9 @@ class EnsureResources extends _react.default.Component {
     this.state = {
       location: { ...location
       },
-      pageResources: pageResources || _loader.default.loadPageSync(location.pathname)
+      pageResources: pageResources || _loader.default.loadPageSync(location.pathname, {
+        withErrorDetails: true
+      })
     };
   }
 
@@ -31,7 +33,9 @@ class EnsureResources extends _react.default.Component {
     location
   }, prevState) {
     if (prevState.location.href !== location.href) {
-      const pageResources = _loader.default.loadPageSync(location.pathname);
+      const pageResources = _loader.default.loadPageSync(location.pathname, {
+        withErrorDetails: true
+      });
 
       return {
         pageResources,
@@ -96,10 +100,19 @@ class EnsureResources extends _react.default.Component {
   }
 
   render() {
-    if (process.env.NODE_ENV !== `production` && !this.state.pageResources) {
-      throw new Error(`EnsureResources was not able to find resources for path: "${this.props.location.pathname}"
+    if (process.env.NODE_ENV !== `production` && (!this.state.pageResources || this.state.pageResources.status === _loader.PageResourceStatus.Error)) {
+      var _this$state$pageResou;
+
+      const message = `EnsureResources was not able to find resources for path: "${this.props.location.pathname}"
 This typically means that an issue occurred building components for that path.
-Run \`gatsby clean\` to remove any cached elements.`);
+Run \`gatsby clean\` to remove any cached elements.`;
+
+      if ((_this$state$pageResou = this.state.pageResources) !== null && _this$state$pageResou !== void 0 && _this$state$pageResou.error) {
+        console.error(message);
+        throw this.state.pageResources.error;
+      }
+
+      throw new Error(message);
     }
 
     return this.props.children(this.state);

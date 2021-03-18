@@ -160,12 +160,14 @@ var _default = (pagePath, isClientOnlyPage, callback) => {
       const childAssets = namedChunkGroups[chunkKey].childAssets;
 
       for (const rel in childAssets) {
-        chunks = (0, _lodash.concat)(chunks, childAssets[rel].map(chunk => {
-          return {
-            rel,
-            name: chunk
-          };
-        }));
+        if (childAssets.hasownProperty(rel)) {
+          chunks = (0, _lodash.concat)(chunks, childAssets[rel].map(chunk => {
+            return {
+              rel,
+              name: chunk
+            };
+          }));
+        }
       }
 
       return chunks;

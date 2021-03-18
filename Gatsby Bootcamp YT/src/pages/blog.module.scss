@@ -2,3 +2,33 @@
     list-style-type: none;
     margin: 0;
 }
+
+.post {
+    margin: 1rem 0;
+
+    a {
+        background: #f7f7f7;
+        color: #000000;
+        display: block;
+        padding: 1rem;
+        text-decoration: none;
+        border-radius: .8rem;
+        box-shadow: -10px -8px 8px #f7f7f7;
+        box-shadow: 10px 8px 8px #f0f0f0;
+        
+    }
+
+    a:hover {
+        background: #e4e4e4;
+    }
+
+    h2 {
+        margin-bottom: 0;
+    }
+
+    p {
+        color: #777777;
+        font-size: .8rem;
+        font-style: italic;
+    }
+}
